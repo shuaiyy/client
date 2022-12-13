@@ -3,7 +3,7 @@ package main
 import (
 	"testing"
 
-	"seelie/www"
+	"seelie/cmd/demo/www"
 )
 
 func TestCommandArgs(t *testing.T) {

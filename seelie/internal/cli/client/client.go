@@ -2,7 +2,6 @@ package client
 
 import (
 	"github.com/spf13/viper"
-
 	"platgit.mihoyo.com/easyai/easyai-core/pkg/go-sdk"
 )
 

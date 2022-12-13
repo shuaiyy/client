@@ -6,6 +6,7 @@ import (
 	"platgit.mihoyo.com/easyai/easyai-core/pkg/api/schema"
 	"platgit.mihoyo.com/easyai/easyai-core/pkg/go-sdk"
 	"platgit.mihoyo.com/easyai/easyai-core/pkg/util/json"
+
 	"seelie/internal/cli/client"
 	"seelie/internal/cli/utils/pretty"
 )

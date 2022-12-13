@@ -5,10 +5,10 @@ import (
 
 	"github.com/spf13/cobra"
 	cliflag "k8s.io/component-base/cli/flag"
+	"platgit.mihoyo.com/easyai/easyai-core/pkg/api/schema"
 
 	"seelie/internal/cli/run"
 	"seelie/internal/cli/utils/stdlogger"
-	"platgit.mihoyo.com/easyai/easyai-core/pkg/api/schema"
 )
 
 // submitTFJobCmd represents submit tfjob command todo 提供栗子 && 文案优化
