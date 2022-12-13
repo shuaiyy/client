@@ -1,0 +1,92 @@
+apiVersion: kubeflow.org/v1
+kind: TFJob
+metadata:
+  annotations:
+    arena.kubeflow.org/username: shuai.yang
+  generation: 1
+  labels:
+    app: tfjob
+    arena.kubeflow.org/uid: 28dae8cd8bb2b0159ce1cc8bc31ecb85
+    release: tf-standalone-test2
+  name: tf-standalone-test2
+  namespace: default
+spec:
+  cleanPodPolicy: Running
+  tfReplicaSpecs:
+    Chief:
+      replicas: 1
+      restartPolicy: Never
+      template:
+        metadata:
+          annotations:
+            arena.kubeflow.org/username: shuai.yang
+            requestGPUsOfJobOwner: "1"
+          labels:
+            app: tfjob
+            arena.kubeflow.org/uid: 28dae8cd8bb2b0159ce1cc8bc31ecb85
+            chart: tfjob-0.35.0
+            createdBy: TFJob
+            heritage: Helm
+            release: tf-standalone-test2
+        spec:
+          containers:
+          - command:
+            - sh
+            - -c
+            - python code/arena-tensorflow-sample-code/tfjob/docker/mnist/main.py --max_steps 5000
+            env:
+            - name: TEST_TMPDIR
+              value: code/arena-tensorflow-sample-code/
+            - name: gpus
+              value: "1"
+            - name: workers
+              value: "1"
+            image: registry.cn-shanghai.aliyuncs.com/shuaiyy/mihoyo-ai:arena-tf1.5-py27-gpu-sample-code
+            imagePullPolicy: Always
+            name: tensorflow
+            ports:
+            - containerPort: 20000
+              name: tfjob-port
+            resources:
+              limits:
+                nvidia.com/gpu: "1"
+              requests:
+                nvidia.com/gpu: "1"
+            volumeMounts:
+            - mountPath: /mydata
+              name: ml-data-shuai-yang
+            workingDir: /root
+          hostIPC: true
+          hostPID: true
+          tolerations:
+          - key: gpu-pod
+            operator: Exists
+          volumes:
+          - name: ml-data-shuai-yang
+            persistentVolumeClaim:
+              claimName: ml-data-shuai-yang
+status:
+  completionTime: "2022-05-06T09:47:27Z"
+  conditions:
+  - lastTransitionTime: "2022-05-06T09:40:18Z"
+    lastUpdateTime: "2022-05-06T09:40:18Z"
+    message: TFJob tf-standalone-test2 is created.
+    reason: TFJobCreated
+    status: "True"
+    type: Created
+  - lastTransitionTime: "2022-05-06T09:40:20Z"
+    lastUpdateTime: "2022-05-06T09:40:20Z"
+    message: TFJob tf-standalone-test2 is running.
+    reason: TFJobRunning
+    status: "False"
+    type: Running
+  - lastTransitionTime: "2022-05-06T09:47:27Z"
+    lastUpdateTime: "2022-05-06T09:47:27Z"
+    message: TFJob tf-standalone-test2 successfully completed.
+    reason: TFJobSucceeded
+    status: "True"
+    type: Succeeded
+  replicaStatuses:
+    Chief:
+      succeeded: 1
+  startTime: "2022-05-06T09:40:18Z"

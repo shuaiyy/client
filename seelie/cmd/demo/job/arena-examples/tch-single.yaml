@@ -1,0 +1,101 @@
+apiVersion: kubeflow.org/v1
+kind: PyTorchJob
+metadata:
+  annotations:
+    arena.kubeflow.org/username: shuai.yang
+  labels:
+    app: pytorchjob
+    arena.kubeflow.org/uid: 28dae8cd8bb2b0159ce1cc8bc31ecb85
+    chart: pytorchjob-0.3.0
+    createdBy: PyTorchJob
+    heritage: Helm
+    release: pytorch-single
+  name: pytorch-single
+  namespace: default
+  resourceVersion: "122963585"
+  uid: cfcbd69a-2f4d-43c9-af4e-537da8bb3fe6
+spec:
+  cleanPodPolicy: None
+  pytorchReplicaSpecs:
+    Master:
+      replicas: 1
+      restartPolicy: Never
+      template:
+        metadata:
+          annotations:
+            arena.kubeflow.org/username: shuai.yang
+            requestGPUsOfJobOwner: "1"
+          labels:
+            app: pytorchjob
+            arena.kubeflow.org/uid: 28dae8cd8bb2b0159ce1cc8bc31ecb85
+            chart: pytorchjob-0.3.0
+            createdBy: PyTorchJob
+            heritage: Helm
+            master-pod-name: pytorch-single-master-0
+            release: pytorch-single
+          name: pytorch-single
+        spec:
+          containers:
+          - command:
+            - sh
+            - -c
+            - "python /root/code/arena-tensorflow-sample-code/mnist-pytorch/mnist.py
+              --backend gloo --save-model true --dir /model_dir/torch-single"
+            env:
+            - name: gpus
+              value: "1"
+            - name: workers
+              value: "1"
+            image: registry.cn-shanghai.aliyuncs.com/shuaiyy/mihoyo-ai:arena-tch1.5.1-py37-tensorboard-gpu-mnist
+            imagePullPolicy: Always
+            name: pytorch
+            resources:
+              limits:
+                nvidia.com/gpu: "1"
+              requests:
+                nvidia.com/gpu: "1"
+            volumeMounts:
+            - mountPath: /data_dir/
+              name: ml-data-shuai-yang
+            - mountPath: /log_dir/
+              name: ml-log-shuai-yang
+            - mountPath: /model_dir/
+              name: ml-model-shuai-yang
+            - mountPath: /summary_dir/
+              name: ml-summary-shuai-yang
+            - mountPath: /dev/shm
+              name: dshm
+            workingDir: /root
+          hostIPC: true
+          hostPID: true
+          tolerations:
+          - key: gpu-pod
+            operator: Exists
+          volumes:
+          - name: ml-data-shuai-yang
+            persistentVolumeClaim:
+              claimName: ml-data-shuai-yang
+          - name: ml-log-shuai-yang
+            persistentVolumeClaim:
+              claimName: ml-log-shuai-yang
+          - name: ml-model-shuai-yang
+            persistentVolumeClaim:
+              claimName: ml-model-shuai-yang
+          - name: ml-summary-shuai-yang
+            persistentVolumeClaim:
+              claimName: ml-summary-shuai-yang
+          - emptyDir:
+              medium: Memory
+              sizeLimit: 2Gi
+            name: dshm
+status:
+  conditions:
+  - lastTransitionTime: "2022-05-10T06:02:53Z"
+    lastUpdateTime: "2022-05-10T06:02:53Z"
+    message: PyTorchJob pytorch-single is created.
+    reason: PyTorchJobCreated
+    status: "True"
+    type: Created
+  replicaStatuses:
+    Master: {}
+  startTime: "2022-05-10T06:02:54Z"

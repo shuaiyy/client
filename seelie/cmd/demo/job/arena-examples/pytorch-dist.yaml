@@ -1,0 +1,189 @@
+apiVersion: kubeflow.org/v1
+kind: PyTorchJob
+metadata:
+  annotations:
+    arena.kubeflow.org/username: shuai.yang
+  labels:
+    app: pytorchjob
+    arena.kubeflow.org/uid: 28dae8cd8bb2b0159ce1cc8bc31ecb85
+    chart: pytorchjob-0.3.0
+    createdBy: PyTorchJob
+    heritage: Helm
+    release: pytorch-dist
+  name: pytorch-dist
+  namespace: default
+  resourceVersion: "123130993"
+  uid: 59b8008e-70bb-456a-aea0-2ebf644377ab
+spec:
+  cleanPodPolicy: None
+  pytorchReplicaSpecs:
+    Master:
+      replicas: 1
+      restartPolicy: Never
+      template:
+        metadata:
+          annotations:
+            arena.kubeflow.org/username: shuai.yang
+            requestGPUsOfJobOwner: "2"
+          labels:
+            app: pytorchjob
+            arena.kubeflow.org/uid: 28dae8cd8bb2b0159ce1cc8bc31ecb85
+            chart: pytorchjob-0.3.0
+            createdBy: PyTorchJob
+            heritage: Helm
+            master-pod-name: pytorch-dist-master-0
+            release: pytorch-dist
+          name: pytorch-dist
+        spec:
+          containers:
+          - command:
+            - sh
+            - -c
+            - "python /root/code/arena-tensorflow-sample-code/mnist-pytorch/mnist.py
+              --backend gloo --save-model --model-dir /model_dir/torch-dist   --dir
+              /summary_dir/torch-dist"
+            env:
+            - name: gpus
+              value: "1"
+            - name: workers
+              value: "2"
+            image: registry.cn-shanghai.aliyuncs.com/shuaiyy/mihoyo-ai:arena-tch1.5.1-py37-tensorboard-gpu-mnist
+            imagePullPolicy: Always
+            name: pytorch
+            resources:
+              limits:
+                nvidia.com/gpu: "1"
+              requests:
+                nvidia.com/gpu: "1"
+            volumeMounts:
+            - mountPath: /data_dir/
+              name: ml-data-shuai-yang
+            - mountPath: /log_dir/
+              name: ml-log-shuai-yang
+            - mountPath: /model_dir/
+              name: ml-model-shuai-yang
+            - mountPath: /summary_dir/
+              name: ml-summary-shuai-yang
+            - mountPath: /dev/shm
+              name: dshm
+            workingDir: /root
+          hostIPC: true
+          hostPID: true
+          tolerations:
+          - key: gpu-pod
+            operator: Exists
+          volumes:
+          - name: ml-data-shuai-yang
+            persistentVolumeClaim:
+              claimName: ml-data-shuai-yang
+          - name: ml-log-shuai-yang
+            persistentVolumeClaim:
+              claimName: ml-log-shuai-yang
+          - name: ml-model-shuai-yang
+            persistentVolumeClaim:
+              claimName: ml-model-shuai-yang
+          - name: ml-summary-shuai-yang
+            persistentVolumeClaim:
+              claimName: ml-summary-shuai-yang
+          - emptyDir:
+              medium: Memory
+              sizeLimit: 2Gi
+            name: dshm
+    Worker:
+      replicas: 1
+      restartPolicy: OnFailure
+      template:
+        metadata:
+          annotations:
+            arena.kubeflow.org/username: shuai.yang
+            requestGPUsOfJobOwner: "2"
+          labels:
+            app: pytorchjob
+            arena.kubeflow.org/uid: 28dae8cd8bb2b0159ce1cc8bc31ecb85
+            chart: pytorchjob-0.3.0
+            createdBy: PyTorchJob
+            heritage: Helm
+            release: pytorch-dist
+          name: pytorch-dist
+        spec:
+          containers:
+          - command:
+            - sh
+            - -c
+            - "python /root/code/arena-tensorflow-sample-code/mnist-pytorch/mnist.py
+              --backend gloo --save-model --model-dir /model_dir/torch-dist   --dir
+              /summary_dir/torch-dist"
+            env:
+            - name: gpus
+              value: "1"
+            - name: workers
+              value: "2"
+            image: registry.cn-shanghai.aliyuncs.com/shuaiyy/mihoyo-ai:arena-tch1.5.1-py37-tensorboard-gpu-mnist
+            imagePullPolicy: Always
+            name: pytorch
+            resources:
+              limits:
+                nvidia.com/gpu: "1"
+              requests:
+                nvidia.com/gpu: "1"
+            volumeMounts:
+            - mountPath: /data_dir/
+              name: ml-data-shuai-yang
+            - mountPath: /log_dir/
+              name: ml-log-shuai-yang
+            - mountPath: /model_dir/
+              name: ml-model-shuai-yang
+            - mountPath: /summary_dir/
+              name: ml-summary-shuai-yang
+            - mountPath: /dev/shm
+              name: dshm
+            workingDir: /root
+          hostIPC: true
+          hostPID: true
+          tolerations:
+          - key: gpu-pod
+            operator: Exists
+          volumes:
+          - name: ml-data-shuai-yang
+            persistentVolumeClaim:
+              claimName: ml-data-shuai-yang
+          - name: ml-log-shuai-yang
+            persistentVolumeClaim:
+              claimName: ml-log-shuai-yang
+          - name: ml-model-shuai-yang
+            persistentVolumeClaim:
+              claimName: ml-model-shuai-yang
+          - name: ml-summary-shuai-yang
+            persistentVolumeClaim:
+              claimName: ml-summary-shuai-yang
+          - emptyDir:
+              medium: Memory
+              sizeLimit: 2Gi
+            name: dshm
+status:
+  completionTime: "2022-05-10T07:24:49Z"
+  conditions:
+  - lastTransitionTime: "2022-05-10T07:24:21Z"
+    lastUpdateTime: "2022-05-10T07:24:21Z"
+    message: PyTorchJob pytorch-dist is created.
+    reason: PyTorchJobCreated
+    status: "True"
+    type: Created
+  - lastTransitionTime: "2022-05-10T07:24:24Z"
+    lastUpdateTime: "2022-05-10T07:24:24Z"
+    message: PyTorchJob pytorch-dist is running.
+    reason: PyTorchJobRunning
+    status: "False"
+    type: Running
+  - lastTransitionTime: "2022-05-10T07:24:49Z"
+    lastUpdateTime: "2022-05-10T07:24:49Z"
+    message: PyTorchJob pytorch-dist is failed because 1 Master replica(s) failed.
+    reason: PyTorchJobFailed
+    status: "True"
+    type: Failed
+  replicaStatuses:
+    Master:
+      failed: 1
+    Worker:
+      active: 1
+  startTime: "2022-05-10T07:24:21Z"

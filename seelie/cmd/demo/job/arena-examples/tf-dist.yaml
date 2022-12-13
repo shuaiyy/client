@@ -1,0 +1,178 @@
+apiVersion: kubeflow.org/v1
+kind: TFJob
+metadata:
+  annotations:
+    arena.kubeflow.org/username: shuai.yang
+  labels:
+    app: tfjob
+    arena.kubeflow.org/uid: 28dae8cd8bb2b0159ce1cc8bc31ecb85
+    chart: tfjob-0.35.0
+    createdBy: TFJob
+    heritage: Helm
+    release: tf-dist
+  name: tf-dist
+  namespace: default
+  resourceVersion: "120153270"
+  uid: 130e1b7d-fea8-47ed-8d51-60ee5174f9e2
+spec:
+  cleanPodPolicy: Running
+  tfReplicaSpecs:
+    PS:
+      replicas: 1
+      restartPolicy: Never
+      template:
+        metadata:
+          annotations:
+            arena.kubeflow.org/username: shuai.yang
+            requestGPUsOfJobOwner: "2"
+          labels:
+            app: tfjob
+            arena.kubeflow.org/uid: 28dae8cd8bb2b0159ce1cc8bc31ecb85
+            chart: tfjob-0.35.0
+            createdBy: TFJob
+            heritage: Helm
+            release: tf-dist
+        spec:
+          containers:
+          - command:
+            - sh
+            - -c
+            - "python code/arena-tensorflow-sample-code/tfjob/docker/v1alpha2/distributed-mnist/main.py
+              --log_dir=/log_dir/tf-dist --data_dir=code/arena-tensorflow-sample-code/data"
+            env:
+            - name: NVIDIA_VISIBLE_DEVICES
+              value: void
+            - name: gpus
+              value: "1"
+            - name: workers
+              value: "2"
+            image: registry.cn-shanghai.aliyuncs.com/shuaiyy/mihoyo-ai:arena-tf1.5-py27-cpu-sample-code
+            imagePullPolicy: Always
+            name: tensorflow
+            ports:
+            - containerPort: 20001
+              name: tfjob-port
+            resources:
+              limits: null
+              requests: null
+            volumeMounts:
+            - mountPath: /data_dir/
+              name: ml-data-shuai-yang
+            - mountPath: /log_dir/
+              name: ml-log-shuai-yang
+            - mountPath: /model_dir/
+              name: ml-model-shuai-yang
+            - mountPath: /summary_dir/
+              name: ml-summary-shuai-yang
+            workingDir: /root
+          hostIPC: true
+          hostPID: true
+          tolerations:
+          - key: gpu-pod
+            operator: Exists
+          volumes:
+          - name: ml-data-shuai-yang
+            persistentVolumeClaim:
+              claimName: ml-data-shuai-yang
+          - name: ml-log-shuai-yang
+            persistentVolumeClaim:
+              claimName: ml-log-shuai-yang
+          - name: ml-model-shuai-yang
+            persistentVolumeClaim:
+              claimName: ml-model-shuai-yang
+          - name: ml-summary-shuai-yang
+            persistentVolumeClaim:
+              claimName: ml-summary-shuai-yang
+    Worker:
+      replicas: 2
+      restartPolicy: Never
+      template:
+        metadata:
+          annotations:
+            arena.kubeflow.org/username: shuai.yang
+            requestGPUsOfJobOwner: "2"
+          labels:
+            app: tfjob
+            arena.kubeflow.org/uid: 28dae8cd8bb2b0159ce1cc8bc31ecb85
+            chart: tfjob-0.35.0
+            createdBy: TFJob
+            heritage: Helm
+            release: tf-dist
+        spec:
+          containers:
+          - command:
+            - sh
+            - -c
+            - "python code/arena-tensorflow-sample-code/tfjob/docker/v1alpha2/distributed-mnist/main.py
+              --log_dir=/log_dir/tf-dist --data_dir=code/arena-tensorflow-sample-code/data"
+            env:
+            - name: gpus
+              value: "1"
+            - name: workers
+              value: "2"
+            image: registry.cn-shanghai.aliyuncs.com/shuaiyy/mihoyo-ai:arena-tf1.5-py27-gpu-sample-code
+            imagePullPolicy: Always
+            name: tensorflow
+            ports:
+            - containerPort: 20000
+              name: tfjob-port
+            resources:
+              limits:
+                nvidia.com/gpu: "1"
+              requests:
+                nvidia.com/gpu: "1"
+            volumeMounts:
+            - mountPath: /data_dir/
+              name: ml-data-shuai-yang
+            - mountPath: /log_dir/
+              name: ml-log-shuai-yang
+            - mountPath: /model_dir/
+              name: ml-model-shuai-yang
+            - mountPath: /summary_dir/
+              name: ml-summary-shuai-yang
+            workingDir: /root
+          hostIPC: true
+          hostPID: true
+          tolerations:
+          - key: gpu-pod
+            operator: Exists
+          volumes:
+          - name: ml-data-shuai-yang
+            persistentVolumeClaim:
+              claimName: ml-data-shuai-yang
+          - name: ml-log-shuai-yang
+            persistentVolumeClaim:
+              claimName: ml-log-shuai-yang
+          - name: ml-model-shuai-yang
+            persistentVolumeClaim:
+              claimName: ml-model-shuai-yang
+          - name: ml-summary-shuai-yang
+            persistentVolumeClaim:
+              claimName: ml-summary-shuai-yang
+status:
+  completionTime: "2022-05-09T07:07:21Z"
+  conditions:
+  - lastTransitionTime: "2022-05-09T07:03:11Z"
+    lastUpdateTime: "2022-05-09T07:03:11Z"
+    message: TFJob tf-dist is created.
+    reason: TFJobCreated
+    status: "True"
+    type: Created
+  - lastTransitionTime: "2022-05-09T07:03:15Z"
+    lastUpdateTime: "2022-05-09T07:03:15Z"
+    message: TFJob tf-dist is running.
+    reason: TFJobRunning
+    status: "False"
+    type: Running
+  - lastTransitionTime: "2022-05-09T07:07:21Z"
+    lastUpdateTime: "2022-05-09T07:07:21Z"
+    message: TFJob tf-dist successfully completed.
+    reason: TFJobSucceeded
+    status: "True"
+    type: Succeeded
+  replicaStatuses:
+    PS:
+      succeeded: 1
+    Worker:
+      succeeded: 2
+  startTime: "2022-05-09T07:03:11Z"
