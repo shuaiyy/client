@@ -15,13 +15,13 @@ FLAGS = -ldflags "-X main.VERSION=$(VERSION) -X $(SETTINGS).BuildCommit=$(COMMIT
 init-git-hook:
 	@bash ./script/git/init.sh
 
-cli:
+cli: init-git-hook lint
 	@echo [Build] version=$(VERSION) commit=$(COMMIT) date=$(TIME)
 	@GOOS=$(GOOS) GOARCH=$(GOARCH) go build $(FLAGS) -o seelie ./cmd/cli/main.go
 
 os_list := darwin linux
 os_arch := amd64 arm64
-cli-all:
+cli-all: init-git-hook lint
 	# https://go.dev/doc/install/source#environment
 	@rm -rf ./tarball/seelie-client*
 	@for goos in $(os_list); do \
