@@ -5,10 +5,10 @@ import (
 	"strings"
 
 	"github.com/spf13/viper"
-
 	"platgit.mihoyo.com/easyai/easyai-core/pkg/go-sdk"
 	"platgit.mihoyo.com/easyai/easyai-core/pkg/third_party"
 	"platgit.mihoyo.com/easyai/easyai-core/pkg/util/conv"
+
 	"seelie/internal/cli/client"
 	"seelie/internal/cli/utils/pretty"
 	"seelie/internal/cli/utils/stdlogger"

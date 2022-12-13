@@ -5,7 +5,6 @@ import (
 
 	"github.com/spf13/cobra"
 	cliflag "k8s.io/component-base/cli/flag"
-
 	"platgit.mihoyo.com/easyai/easyai-core/pkg/api/schema"
 )
 

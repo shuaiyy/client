@@ -14,8 +14,8 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-
 	"platgit.mihoyo.com/easyai/easyai-core/pkg/auth"
+
 	"seelie/internal/cli/command"
 	"seelie/internal/cli/utils/stdlogger"
 )
